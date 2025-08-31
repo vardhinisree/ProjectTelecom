@@ -2,6 +2,7 @@ package com.telecom.Wezen.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,13 +13,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.telecom.Wezen.entity.Plan;
+import com.telecom.Wezen.repositories.PlanRepository;
 import com.telecom.Wezen.service.PlanService;
 
 @RestController
 @RequestMapping("/api/plans")
 public class PlanController {
+	 @Autowired
+	    private PlanRepository planRepository;
 
     private final PlanService planService;
 
@@ -54,6 +57,12 @@ public class PlanController {
     public ResponseEntity<Void> deletePlan(@PathVariable Long id) {
         planService.deletePlan(id);
         return ResponseEntity.noContent().build();
+    }
+    
+    @GetMapping("/type/{type}")
+    public List<Plan> getPlansByType(@PathVariable String type) {
+        System.out.println("Fetching plans with type: " + type);
+        return planRepository.findByPlanType(type.toLowerCase()); 
     }
 }
 

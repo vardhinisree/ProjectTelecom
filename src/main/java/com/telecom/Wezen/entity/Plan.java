@@ -3,6 +3,7 @@ package com.telecom.Wezen.entity;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Optional;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -27,7 +28,7 @@ import lombok.NoArgsConstructor;
 public class Plan {
 	@Id
 	private Long plan_id;
-	private String plan_type;//  prepaid or postpaid
+	private String planType;//  prepaid or postpaid
 	private Integer validityDays;
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "plan_data_packs", joinColumns = @JoinColumn(name = "plan_id"))
@@ -50,11 +51,11 @@ public class Plan {
 	}
 
 	public String getPlan_type() {
-		return plan_type;
+		return planType;
 	}
 
 	public void setPlan_type(String plan_type) {
-		this.plan_type = plan_type;
+		this.planType = plan_type;
 	}
 
 	public Integer getValidityDays() {
@@ -92,9 +93,14 @@ public class Plan {
 
 	@Override
 	public String toString() {
-		return "Plan [plan_id=" + plan_id + ", plan_type=" + plan_type + ", validityDays=" + validityDays
+		return "Plan [plan_id=" + plan_id + ", plan_type=" + planType + ", validityDays=" + validityDays
 				+ " dataPacks=" + dataPacks + ", createdAt=" + createdAt + ", updatedAt="
 				+ updatedAt + "]";
+	}
+
+	public Optional<Plan> map(Object object) {
+		// TODO Auto-generated method stub
+		return null;
 	}
     
     

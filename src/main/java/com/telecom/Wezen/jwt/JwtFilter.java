@@ -30,7 +30,9 @@ public class JwtFilter extends OncePerRequestFilter {
     private final RequestMatcher publicEndpoints = new OrRequestMatcher(
             new AntPathRequestMatcher("/api/auth/**"),
             new AntPathRequestMatcher("/error"),
-            new AntPathRequestMatcher("/api/plans/**")
+            new AntPathRequestMatcher("/api/plans/**"),
+            new AntPathRequestMatcher("/api/recharges/**"),
+            new AntPathRequestMatcher("/api/users/**")
     );
 
     public JwtFilter(JwtUtil jwtUtil) {

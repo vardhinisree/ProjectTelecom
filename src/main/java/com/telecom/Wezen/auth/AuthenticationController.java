@@ -1,21 +1,26 @@
 package com.telecom.Wezen.auth;
 
-import com.telecom.Wezen.entity.Users;
-import com.telecom.Wezen.jwt.JwtUtil;
-import com.telecom.Wezen.records.Login;
-import com.telecom.Wezen.records.Register;
-import com.telecom.Wezen.repositories.UserRepository;
+import java.util.Map;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import com.telecom.Wezen.entity.Users;
+import com.telecom.Wezen.enums.Role;
+import com.telecom.Wezen.jwt.JwtUtil;
+import com.telecom.Wezen.records.Login;
+import com.telecom.Wezen.records.Register;
+import com.telecom.Wezen.repositories.UserRepository;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -48,6 +53,14 @@ public class AuthenticationController {
         newUser.setMail(request.mail());
         newUser.setPassword(passwordEncoder.encode(request.password()));
         newUser.setPhoneNo(request.phoneNo());
+        
+     // ✅ Default role logic
+        if (request.role() == null) {
+            newUser.setRole(Role.customer);
+        } else {
+            newUser.setRole(request.role());
+        }
+
                // <-- important for security
           // <-- plan info
 
@@ -82,7 +95,7 @@ public class AuthenticationController {
                             "userName", user.getName(),
                             "email", user.getMail(),
                             "role", user.getRole(),
-                            "planId", user.getId()
+                            "userId", user.getId()
                     )
             ));
         } catch (Exception e) {

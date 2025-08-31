@@ -1,25 +1,29 @@
 package com.telecom.Wezen.controller;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.telecom.Wezen.entity.Plan;
 import com.telecom.Wezen.entity.Users;
+import com.telecom.Wezen.service.PlanService;
 import com.telecom.Wezen.service.UserService;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/users")
 public class UserController {
+	@Autowired
+    private PlanService planService; //
 
     private final UserService userService;
 
@@ -47,12 +51,21 @@ public class UserController {
     }
 
     // Update existing user
-    @PutMapping("/{id}")
-    public ResponseEntity<Users> updateUser(@PathVariable Long id, @RequestBody Users updatedUser) {
-        Users existing = userService.getUserById(id);
+    @PatchMapping("/{id}")
+    public ResponseEntity<Users> updateUserPlan(@PathVariable Long id, @RequestBody Map<String, Long> request) {
+        Users existing = userService.getUserById(id);  // this MUST fetch from DB
         if (existing != null) {
-            updatedUser.setId(id);
-            return ResponseEntity.ok(userService.saveUser(updatedUser));
+            Long planId = request.get("plan_id");
+            Plan plan = planService.getPlanById(planId).orElse(null); // get Plan safely
+            if (plan == null) {
+                return ResponseEntity.badRequest().build(); // invalid plan
+            }
+
+            // ✅ only update the plan field, leave others untouched
+            existing.setPlan(plan);
+
+            Users saved = userService.saveUser(existing);
+            return ResponseEntity.ok(saved);
         }
         return ResponseEntity.notFound().build();
     }

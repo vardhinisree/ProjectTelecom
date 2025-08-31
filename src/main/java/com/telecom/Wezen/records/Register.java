@@ -6,13 +6,11 @@ public record Register(
 		 String name,
 	    String mail,
 	    String password,
-	    String phoneNo
+	    String phoneNo,
+	    Role role 
 	    
 ) {
 
-	public Role role() {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	
 
 }

@@ -39,9 +39,9 @@ public class SecurityConfig {
 
                 // Authorization rules
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/**", "/api/auth/login","/api/plans", "/error").permitAll()  // 🔓 Public endpoints
+                        .requestMatchers("/api/auth/**", "/api/auth/login","/api/plans/**","/api/recharges/**","/api/users/**","/error").permitAll()  // 🔓 Public endpoints
                         .requestMatchers("/admin/**").hasRole("ADMIN")          // 👮 ADMIN only
-                        .requestMatchers("/plans/**").hasAnyRole("ADMIN", "USER") // 👥 Admin or User
+                        // 👥 Admin or User
                         .anyRequest().authenticated()                           // 🔒 everything else
                 )
 
